@@ -1,1 +1,4 @@
 /spring-reddit/src/main/resources/application.properties
+spring-reddit/src/main/resources/application.properties
+/angular-reddit/node_modules
+angular-reddit/node_modules
