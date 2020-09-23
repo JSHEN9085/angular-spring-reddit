@@ -2,6 +2,7 @@ package com.jshen9085.reddit.service;
 
 import com.jshen9085.reddit.dto.AuthenticationResponse;
 import com.jshen9085.reddit.dto.LoginRequest;
+import com.jshen9085.reddit.dto.RefreshTokenRequest;
 import com.jshen9085.reddit.dto.RegisterRequest;
 import com.jshen9085.reddit.exception.SpringRedditException;
 import com.jshen9085.reddit.model.NotificationEmail;
@@ -40,6 +41,7 @@ public class AuthService {
 
     private final JwtProvider jwtProvider;
 
+    private final RefreshTokenService refreshTokenService;
 
 
     @Transactional
@@ -92,7 +94,12 @@ public class AuthService {
                 loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
-        return new AuthenticationResponse(token, loginRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(loginRequest.getUsername())
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -101,5 +108,16 @@ public class AuthService {
                 getContext().getAuthentication().getPrincipal();
         return userRepository.findByUsername(principal.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest){
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(refreshTokenRequest.getUsername())
+                .build();
     }
 }
