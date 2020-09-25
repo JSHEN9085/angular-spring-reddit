@@ -12,7 +12,6 @@ import { LocalStorageService } from 'ngx-webstorage';
 })
 export class AuthService {
 
-
   constructor(private httpClient: HttpClient, 
               private localStorage: LocalStorageService) { }
 
@@ -29,6 +28,34 @@ export class AuthService {
       this.localStorage.store('expiresAt', data.expiresAt);
       return true; 
     }) )
-      
+  }
+
+  getJwtToken() {
+    return this.localStorage.retrieve('authenticationToken');
+  }
+
+  refreshToken() {
+    const refreshTokenPayload = {
+      refreshToken: this.getRefreshToken(),
+      username: this.getUserName()
+    }
+    return this.httpClient.post<LoginResponse>('http://localhost:8080/api/auth/refresh/token',
+      refreshTokenPayload)
+      .pipe(tap(response => {
+        this.localStorage.store('authenticationToken', response.authenticationToken);
+        this.localStorage.store('expiresAt', response.expiresAt);
+      }));
+  }
+
+  getRefreshToken() {
+    return this.localStorage.retrieve('refreshToken');
+  }
+
+  getUserName() {
+    return this.localStorage.retrieve('username');
+  }
+
+  getExpirationTime() {
+    return this.localStorage.retrieve('expiresAt');
   }
 }
