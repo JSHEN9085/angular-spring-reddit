@@ -1,6 +1,7 @@
 package com.jshen9085.reddit.mapper;
 
 import com.jshen9085.reddit.dto.SubredditDto;
+import com.jshen9085.reddit.model.User;
 import com.jshen9085.reddit.model.Post;
 import com.jshen9085.reddit.model.Subreddit;
 import org.mapstruct.InheritInverseConfiguration;
@@ -22,5 +23,6 @@ public interface SubredditMapper {
 
     @InheritInverseConfiguration
     @Mapping(target = "posts", ignore = true)
-    Subreddit mapDtoToSubreddit(SubredditDto subredditDto);
+    @Mapping(target = "createdDate", expression = "java(java.time.Instant.now())")
+    Subreddit mapDtoToSubreddit(SubredditDto subredditDto, User user);
 }

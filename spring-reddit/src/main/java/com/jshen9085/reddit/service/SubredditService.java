@@ -20,12 +20,13 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class SubredditService {
 
+    private final AuthService authService;
     private final SubredditRepository subredditRepository;
     private final SubredditMapper subredditMapper;
 
     @Transactional
     public SubredditDto save(SubredditDto subredditDto) {
-        Subreddit save = subredditRepository.save(subredditMapper.mapDtoToSubreddit(subredditDto));
+        Subreddit save = subredditRepository.save(subredditMapper.mapDtoToSubreddit(subredditDto, authService.getCurrentUser()));
         subredditDto.setId(save.getId());
         return subredditDto;
     }
