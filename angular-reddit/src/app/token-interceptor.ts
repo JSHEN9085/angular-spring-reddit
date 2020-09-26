@@ -15,21 +15,30 @@ export class TokenInterceptor implements HttpInterceptor {
     
     constructor(public authService: AuthService) { }
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable< HttpEvent<any> > {
-        const jwtToken = this.authService.getJwtToken();
-        if(jwtToken){
-            this.addToken(req, jwtToken)
-        }
-        return next.handle(req).pipe(catchError(error => {
-            if(error instanceof HttpErrorResponse && error.status == 403){
-                return this.handleAuthErrors(req, next); 
-            } else {
-                return throwError(error); 
-            }
-        })) 
-    };
+    intercept(req: HttpRequest<any>, next: HttpHandler):
+        Observable<HttpEvent<any>> {
 
-    private handleAuthErrors(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        if (req.url.indexOf('refresh') !== -1 || req.url.indexOf('login') !== -1) {
+            return next.handle(req);
+        }
+        const jwtToken = this.authService.getJwtToken();
+
+        if (jwtToken) {
+            return next.handle(this.addToken(req, jwtToken)).pipe(catchError(error => {
+                if (error instanceof HttpErrorResponse
+                    && error.status === 403) {
+                    return this.handleAuthErrors(req, next);
+                } else {
+                    return throwError(error);
+                }
+            }));
+        }
+        return next.handle(req);
+
+    }
+
+    private handleAuthErrors(req: HttpRequest<any>, next: HttpHandler)
+        : Observable<HttpEvent<any>> {
         if (!this.isTokenRefreshing) {
             this.isTokenRefreshing = true;
             this.refreshTokenSubject.next(null);
@@ -55,7 +64,7 @@ export class TokenInterceptor implements HttpInterceptor {
         }
     }
 
-    private addToken(req: HttpRequest<any>, jwtToken: string) {
+    private addToken(req: HttpRequest<any>, jwtToken: any) {
         return req.clone({
             headers: req.headers.set('Authorization',
                 'Bearer ' + jwtToken)

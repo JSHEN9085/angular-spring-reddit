@@ -39,9 +39,7 @@ export class CreateSubredditComponent implements OnInit {
     this.subredditModel.name = this.createSubredditForm.get('title')
     .value;
     this.subredditModel.description = this.createSubredditForm.get('description')
-    .value;
-    console.log(this.subredditModel);
-    
+    .value;    
     this.subredditService.createSubreddit(this.subredditModel).subscribe(data => {
       this.router.navigateByUrl('/list-subreddits');
     }, error => {
