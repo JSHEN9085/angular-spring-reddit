@@ -18,6 +18,9 @@ import { PostTitleComponent } from './components/post-title/post-title.component
 import { VoteButtonComponent } from './components/vote-button/vote-button.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { SubredditSideBarComponent } from './components/subreddit-side-bar/subreddit-side-bar.component';
+import { CreateSubredditComponent } from './components/create-subreddit/create-subreddit.component';
+import { CreatePostComponent } from './components/create-post/create-post.component';
+import { ListSubredditsComponent } from './components/list-subreddits/list-subreddits.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { SubredditSideBarComponent } from './components/subreddit-side-bar/subre
     PostTitleComponent,
     VoteButtonComponent,
     SideBarComponent,
-    SubredditSideBarComponent
+    SubredditSideBarComponent,
+    CreateSubredditComponent,
+    CreatePostComponent,
+    ListSubredditsComponent
   ],
   imports: [
     BrowserModule,
