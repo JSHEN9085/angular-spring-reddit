@@ -9,7 +9,7 @@ import { ListSubredditsComponent } from './components/list-subreddits/list-subre
 
 //remember to add <router-outlet></router-outlet> inside app.component.html
 const routes: Routes = [
-  {path: 'sign-up', component: SignupComponent},
+  {path: 'signup', component: SignupComponent},
   {path: 'login', component: LoginComponent},
   {path: '', component: HomeComponent},
   {path: 'list-subreddits', component: ListSubredditsComponent},
