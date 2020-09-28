@@ -21,6 +21,10 @@ export class HeaderComponent implements OnInit {
     this.authService.username.subscribe((data: string) => this.username = data);
     this.isLoggedIn = this.authService.isLoggedIn();
     this.username = this.authService.getUserName();
+    console.log(this.isLoggedIn);
+    console.log(this.username);
+    
+    
   }
 
   goToUserProfile(){

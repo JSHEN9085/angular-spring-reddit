@@ -33,6 +33,8 @@ export class AuthService {
       this.localStorage.store('username', data.username);
       this.localStorage.store('refreshToken', data.refreshToken);
       this.localStorage.store('expiresAt', data.expiresAt);
+      this.loggedIn.emit(true);
+      this.username.emit(data.username);
       return true; 
     }) )
   }
@@ -66,7 +68,7 @@ export class AuthService {
     return this.localStorage.retrieve('expiresAt');
   }
 
-  isLoggedIn(): boolean {
+  isLoggedIn(): boolean {    
     return this.getJwtToken() != null;
   }
 

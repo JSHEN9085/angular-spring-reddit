@@ -5,7 +5,6 @@ import com.jshen9085.reddit.dto.LoginRequest;
 import com.jshen9085.reddit.dto.RefreshTokenRequest;
 import com.jshen9085.reddit.dto.RegisterRequest;
 import com.jshen9085.reddit.exception.SpringRedditException;
-import com.jshen9085.reddit.model.NotificationEmail;
 import com.jshen9085.reddit.model.User;
 import com.jshen9085.reddit.model.VerificationToken;
 import com.jshen9085.reddit.repository.UserRepository;
@@ -51,16 +50,16 @@ public class AuthService {
         user.setEmail(registerRequest.getEmail());
         user.setPassword( passwordEncoder.encode(registerRequest.getPassword()) );
         user.setCreated(Instant.now());
-        user.setEnable(false);
+        user.setEnable(true);
 
         userRepository.save(user);
 
-        String token = generateVerificationToken(user);
-        mailService.sendMail(new NotificationEmail("Please Activate your account",
-                user.getEmail(),
-                "Thank you for signing up to Spring Reddit, " +
-                        "please click on the below url to activate your account : " +
-                        "http://localhost:8080/api/auth/accountVerification/" + token));
+//        String token = generateVerificationToken(user);
+//        mailService.sendMail(new NotificationEmail("Please Activate your account",
+//                user.getEmail(),
+//                "Thank you for signing up to Spring Reddit, " +
+//                        "please click on the below url to activate your account : " +
+//                        "http://localhost:8080/api/auth/accountVerification/" + token));
 
 
     }
