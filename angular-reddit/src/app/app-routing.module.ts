@@ -7,6 +7,7 @@ import { CreateSubredditComponent } from './components/create-subreddit/create-s
 import { CreatePostComponent } from './components/create-post/create-post.component';
 import { ListSubredditsComponent } from './components/list-subreddits/list-subreddits.component';
 import { ViewPostComponent } from './components/view-post/view-post.component';
+import { AuthGuard } from 'src/app/auth/auth.guard';
 
 //remember to add <router-outlet></router-outlet> inside app.component.html
 const routes: Routes = [
@@ -15,8 +16,8 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'posts/:id', component: ViewPostComponent},
   {path: 'list-subreddits', component: ListSubredditsComponent},
-  {path: 'create-post', component: CreatePostComponent},
-  {path: 'create-subreddit', component: CreateSubredditComponent}
+  {path: 'create-post', component: CreatePostComponent, canActivate: [AuthGuard]},
+  {path: 'create-subreddit', component: CreateSubredditComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
